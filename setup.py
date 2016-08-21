@@ -14,7 +14,7 @@ setup(
   author = 'Anand A. Joshi',
   author_email = 'ajoshi.usc@outlook.com',
   url = 'https://github.com/ajoshiusc/sphere-kit', # use the URL to the github repo
-  download_url = 'https://github.com/ajoshiusc/sphere-kit/tarball/0.1', # I'll explain this in a second
+  download_url = 'https://github.com/ajoshiusc/sphere-kit/tarball/0.0', # I'll explain this in a second
   keywords = ['sphere', 'signal processing', 'clustering', 'image analysis'], # arbitrary keywords
   classifiers = [],
 )
