@@ -1,11 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Apr 13 09:20:37 2017
-
-@author: Bhavana
+This module contains all the functions that are used to sample from 
+the VMF distribution.
+    
+GUIDE : 
+    Prof. Anand A Joshi - ajoshi@sipi.usc.edu
+TEAM:
+    Bhavana Ganesh - bhavanag@usc.edu
+    Mahathi Vatsal Salopanthula - salopant@usc.edu
+    Sayali Ghume - ghume@usc.edu
+    
+Contact any of the members for queries and bugs.
 """
-#This file contains all the functions that
-#are used to generate random samples from the VMF distribution.
+
 
 import numpy as np
 import numpy.matlib as npm
@@ -13,13 +20,16 @@ import sys
 from numpy.linalg import svd
 import mpmath
 
-#This function generates samples from the Von Mises Fisher Distribution
-#The inputs are:
-    #N=Number of samples
-    #mu=Mean of the VMF distrivution. It should always be 1
-    #k=Kappa parameter
-#The output is N x dimension(mu) matrix of samples generated from VMF distribution.
 def randVMF (N, mu ,k):
+    """
+    This function generates samples from the Von Mises Fisher Distribution
+    The inputs are:
+        N=Number of samples
+        mu=Mean of the VMF distrivution. It should always be 1
+        k=Kappa parameter
+    The output is N x dimension(mu) matrix of samples generated from VMF distribution.
+
+    """
     if(np.linalg.norm(mu,2)<(1-0.0001) or np.linalg.norm(mu,2)>(1+0.0001)):
         sys.exit('Mu must be unit vector')
     else:
@@ -37,15 +47,18 @@ def randVMF (N, mu ,k):
         Rot = np.concatenate((tmu.T,Otho), axis=1)
         RandVMF = np.transpose(np.dot(Rot,np.transpose(RandVMF)))                            
         return RandVMF
-   
-        
-#This function generates random samples from VMF distribution using rejection sampling.
-#The inputs are:
-    #N=Number of samples
-    #k=Kappa parameter  
-    #p=Dimension of VMF distribution
-#An N x 1 vector of random samples from VMF tangent distribution
+    
+    
 def randVMFMeanDir (N, k, p):
+    """
+    This function generates random samples from VMF distribution using rejection sampling.
+    The inputs are:
+        N=Number of samples
+        k=Kappa parameter  
+        p=Dimension of VMF distribution
+    The output is N x 1 vector of random samples from VMF tangent distribution
+    
+    """
     min_thresh = (1/(5*N))
     xx = np.arange(-1,1,0.000001)    
     yy = VMFMeanDirDensity(xx,k,p)
@@ -74,14 +87,16 @@ def randVMFMeanDir (N, k, p):
     return t
 
 
-#This function is the tangent direction density of VMF distribution.
-#The inputs are:
-    #x=Tangent value between [-1 1]
-    #k=kappa parameter
-    #p=Dimension of the VMF distribution
-#The output is y=density of the VMF tangent density 
-def VMFMeanDirDensity(x, k, p):  
-    
+def VMFMeanDirDensity(x, k, p): 
+    """
+    This function is the tangent direction density of VMF distribution.
+    The inputs are:
+        x=Tangent value between [-1 1]
+        k=kappa parameter
+        p=Dimension of the VMF distribution
+    The output is y=density of the VMF tangent density 
+
+    """    
     for i in range (0,len(x)):
         if(x[i]<-1.0 or x[i]>1.0):
             sys.exit('Input of x must be within -1 to 1')
@@ -89,23 +104,31 @@ def VMFMeanDirDensity(x, k, p):
     y = coeff * np.exp(k*x)*np.power((1-np.square(x)),((p-2)/2))
     return y
 
-#This function generate the random samples uniformly on a d-dimensional sphere
-#The inputs are :
-    #N=Number of samples
-    #p=Dimension of the VMF distribution
-#The output is N x d dim matrix which are 
-#the N random samples generated on the unit p-dimensional sphere
+
 def randUniformSphere(N,p):
+    """
+    This function generate the random samples uniformly on a d-dimensional sphere
+    The inputs are :
+        N=Number of samples
+        p=Dimension of the VMF distribution
+    The output is N x d dim matrix which are the N random samples generated 
+    on the unit p-dimensional sphere
+
+    """
     randNorm = np.random.normal(np.zeros([N,p]),1,size = [N,p])
     RandSphere = np.zeros([N,p])
     for r in range(0,N):
         RandSphere[r,:] = randNorm[r,:]/np.linalg.norm(randNorm[r,:])
     return RandSphere
 
-#This function generates the null space of a matrix
-#The source from where it is taken is:  
-#http://scipy-cookbook.readthedocs.io/items/RankNullspace.html
+
 def nullspace(A, atol=1e-13, rtol=0):
+    """
+    This function generates the null space of a matrix
+    The source from where it is taken is:  
+        http://scipy-cookbook.readthedocs.io/items/RankNullspace.html
+
+    """
     A = np.atleast_2d(A)
     u, s, vh = svd(A)
     tol = max(atol, rtol * s[0])
