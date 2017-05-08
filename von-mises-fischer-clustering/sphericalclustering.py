@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Apr 13 09:21:50 2017
-
-@author: Bhavana
+This module clusters the data using the VMF distribution
+    
+GUIDE : 
+    Prof. Anand A Joshi - ajoshi@sipi.usc.edu
+TEAM:
+    Bhavana Ganesh - bhavanag@usc.edu
+    Mahathi Vatsal Salopanthula - salopant@usc.edu
+    Sayali Ghume - ghume@usc.edu
+    
+Contact any of the members for queries and bugs.
 """
-#This function clusters the data using the VMF distribution
 
 import numpy as np
 import mpmath
 
+#getting the size of the data
 def sphericalknn (data,no_clusters):
-
-#getting the size of the data    
+    
     H=len(data)
     W=len(data[0])
     
@@ -30,7 +36,9 @@ def sphericalknn (data,no_clusters):
         temp = mean_sample+random_sample2
         mean_global[i,:] = temp/np.linalg.norm(temp)
 
+  
 #calculating mean from spherical kmeans
+
     sum_sample3 = np.zeros([1,W])
     difference=1
     epsilon=0.01
@@ -40,8 +48,8 @@ def sphericalknn (data,no_clusters):
     while (difference>epsilon):
         iteration=iteration+1
         number2=number
-        
         #computing the nearest neighbour and assigning the points
+        #E Step in EM algorithm
         mean_global2 = np.transpose(mean_global)
         value=np.dot(data, mean_global2)
         value_max=value.max(1)
@@ -49,8 +57,10 @@ def sphericalknn (data,no_clusters):
     
     #computing value of the function
         number=sum(value_max) 
+    #print(number)
 
     #computing centroids for the clusters
+    #M step in EM algorithm
         for i in range(0,no_clusters):
             sum_sample3=sum(data[np.where(clusters==i)])
             if(mpmath.norm(sum_sample3) != 0):
